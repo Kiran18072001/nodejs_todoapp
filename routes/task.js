@@ -1,21 +1,20 @@
-import express from "express";
-import {
-  deleteTask,
-  getMyTask,
-  newTask,
-  updateTask,
-} from "../controllers/task.js";
-import { isAuthenticated } from "../middlewares/auth.js";
+import express from 'express';
+
+import { deleteTask, getMyTask, newTask, updateTask } from '../controllers/task.js';
+import { isAuthenticated } from '../middlewares/auth.js';
 
 const router = express.Router();
 
-router.post("/new", isAuthenticated, newTask);
+router.post("/new", isAuthenticated, newTask); 
+// only create a task when the user is logged in, hence isAuthenticated is used
 
 router.get("/my", isAuthenticated, getMyTask);
 
+// to update and delete the tasks 
+
 router
-  .route("/:id")
-  .put(isAuthenticated, updateTask)
-  .delete(isAuthenticated, deleteTask);
+    .route("/:id")
+    .put(isAuthenticated, updateTask)
+    .delete(isAuthenticated, deleteTask);
 
 export default router;

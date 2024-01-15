@@ -1,17 +1,22 @@
 import { User } from "../models/user.js";
-import jwt from "jsonwebtoken";
+import jwt from 'jsonwebtoken';
 
-export const isAuthenticated = async (req, res, next) => {
-  const { token } = req.cookies;
+// created because some of the routes should be accessible only after logging in the account,
+// so for all the routes using authentication code is pretty hectic so to avoid this we created
+// a separated function and can be used as a middleware for the other routes.
 
-  if (!token)
-    return res.status(404).json({
-      success: false,
-      message: "Login First",
-    });
+export const isAuthenticated = async(req, res, next) => {
+    const { token } = req.cookies;
+    console.log(token);
 
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!token) {
+        res.status(404).json({
+            success: false,
+            message: "Login First"
+        })
+    }
 
-  req.user = await User.findById(decoded._id);
-  next();
-};
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = await User.findById(decoded._id);
+    next();
+}
